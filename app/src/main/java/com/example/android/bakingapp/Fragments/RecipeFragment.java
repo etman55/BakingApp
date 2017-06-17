@@ -2,6 +2,7 @@ package com.example.android.bakingapp.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -29,6 +30,8 @@ public class RecipeFragment extends Fragment {
     RecyclerView ingredientsRecycler;
     @BindView(R.id.steps_list)
     RecyclerView stepsRecycler;
+    @BindView(R.id.scrollView)
+    NestedScrollView scrollView;
     private StepCallBack callback;
     private IngredientsAdapter ingredientsAdapter;
     private StepsAdapter stepsAdapter;
@@ -103,6 +106,7 @@ public class RecipeFragment extends Fragment {
         if (model != null) {
             ingredientsAdapter.updateList(model.getIngredients());
             stepsAdapter.updateList(model.getSteps());
+            scrollView.smoothScrollTo(0, 0);
         }
     }
 
