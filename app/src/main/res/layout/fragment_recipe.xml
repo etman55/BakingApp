@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/ingredients_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/md_keylines_padding"
+                android:gravity="center"
+                android:text="@string/ingredients"
+                android:textColor="@color/united_nations_blue"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/ingredients_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ingredients_title"
+                android:layout_margin="@dimen/md_keylines_padding" />
+
+
+            <TextView
+                android:id="@+id/steps_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ingredients_list"
+                android:layout_margin="@dimen/md_keylines_padding"
+                android:gravity="center"
+                android:text="@string/recipe_steps"
+                android:textColor="@color/united_nations_blue"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/steps_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/steps_title"
+                android:layout_margin="@dimen/md_keylines_padding" />
+
+        </RelativeLayout>
+    </android.support.v4.widget.NestedScrollView>
+</RelativeLayout>
+
+
+

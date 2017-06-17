@@ -5,28 +5,27 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.android.bakingapp.Models.Model;
+import com.example.android.bakingapp.Models.Step;
 import com.example.android.bakingapp.R;
-import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.RealmResults;
 
 /**
- * Created by Etman on 6/16/2017.
+ * Created by Etman on 6/17/2017.
  */
 
-public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.MyViewHolder> {
-    private RealmResults<Model> contentList;
+public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.MyViewHolder> {
+    List<Step> contentList = new ArrayList<>();
     private static OnItemClickListener listener;
     Context context;
 
-    public RecipesAdapter(RealmResults<Model> contentList, Context context) {
-        updateList(contentList);
+    public StepsAdapter(Context context) {
         this.context = context;
     }
 
@@ -37,20 +36,13 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.MyViewHo
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item, parent, false);
+                .inflate(R.layout.steps_item, parent, false);
         return new MyViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        holder.title.setText(contentList.get(position).getName());
-        if (!contentList.get(position).getImage().equals(""))
-            Picasso.with(context).load(contentList.get(position).getImage()).into(holder.pic);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return contentList.get(position).getId();
+        holder.name.setText(contentList.get(position).getShortDescription());
     }
 
     @Override
@@ -58,16 +50,15 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.MyViewHo
         return contentList.size();
     }
 
-    public void updateList(RealmResults<Model> contentList) {
+    public void updateList(List<Step> contentList) {
         this.contentList = contentList;
         notifyDataSetChanged();
     }
 
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.recipe_pic)
-        ImageView pic;
-        @BindView(R.id.recipe_title)
-        TextView title;
+        @BindView(R.id.step_name)
+        TextView name;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -75,7 +66,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.MyViewHo
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onItemClick(v, getAdapterPosition());
+                    listener.onItemClick(v,getAdapterPosition());
                 }
             });
         }
@@ -84,5 +75,4 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.MyViewHo
     public interface OnItemClickListener {
         void onItemClick(View itemView, int position);
     }
-
 }

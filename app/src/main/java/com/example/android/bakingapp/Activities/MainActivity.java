@@ -2,7 +2,6 @@ package com.example.android.bakingapp.Activities;
 
 import android.content.Intent;
 import android.os.Handler;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.android.bakingapp.API.DownloadResultReceiver;
 import com.example.android.bakingapp.API.RecipesService;
@@ -94,7 +92,10 @@ public class MainActivity extends AppCompatActivity implements DownloadResultRec
         recipesAdapter.setOnItemClickListener(new RecipesAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int position) {
-
+                long id = recipesAdapter.getItemId(position);
+                Intent intent = new Intent(MainActivity.this, RecipeDetailsActivity.class);
+                intent.putExtra("recipeId", id);
+                startActivity(intent);
             }
         });
     }
