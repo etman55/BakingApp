@@ -16,6 +16,9 @@ public class StepDetailsActivity extends AppCompatActivity {
     private static final String TAG = StepDetailsActivity.class.getSimpleName();
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    private String stepDesc;
+    private String stepVideo;
+    private String stepImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,14 +27,25 @@ public class StepDetailsActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         if (getIntent().getExtras() != null) {
-            StepFragment stepFragment = StepFragment.newInstance(
-                    getIntent().getExtras().getString("stepDesc"),
-                    getIntent().getExtras().getString("stepVideo"),
-                    getIntent().getExtras().getString("stepThumbnail"));
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.step_fragment, stepFragment);
-            ft.commit();
+            stepDesc = getIntent().getExtras().getString("stepDesc");
+            stepVideo = getIntent().getExtras().getString("stepVideo");
+            stepImage = getIntent().getExtras().getString("stepThumbnail");
         }
+        if (savedInstanceState != null) {
+            stepDesc = savedInstanceState.getString("stepDesc");
+            stepVideo = savedInstanceState.getString("stepVideo");
+            stepImage = savedInstanceState.getString("stepThumbnail");
+        }
+        StepFragment stepFragment = (StepFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.step_fragment);
+        stepFragment.getStepInfo(stepDesc, stepVideo, stepImage);
+    }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("stepDesc", stepDesc);
+        outState.putString("stepVideo", stepVideo);
+        outState.putString("stepThumbnail", stepImage);
     }
 }

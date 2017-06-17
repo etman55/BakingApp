@@ -25,8 +25,6 @@ import io.realm.RealmResults;
 
 public class RecipeFragment extends Fragment {
     private static final String TAG = RecipeFragment.class.getSimpleName();
-    // the fragment initialization parameters
-    private static final String ARG_ID = "recipeId";
     @BindView(R.id.ingredients_list)
     RecyclerView ingredientsRecycler;
     @BindView(R.id.steps_list)
