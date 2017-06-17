@@ -5,21 +5,23 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/md_keylines_padding"
     card_view:cardCornerRadius="@dimen/md_keylines_padding"
+    android:background="?android:attr/selectableItemBackground"
     card_view:cardUseCompatPadding="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/united_nations_blue"
+        android:background="@drawable/list_item_selector"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/step_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
             android:layout_margin="@dimen/md_keylines_padding"
             android:text="@string/ingredients"
+            android:textColor="@color/white"
             android:textSize="20sp" />
 
 

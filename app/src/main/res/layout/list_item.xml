@@ -11,7 +11,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/united_nations_blue">
+        android:background="@drawable/list_item_selector">
 
         <ImageView
             android:id="@+id/recipe_pic"
@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/tile_height"
             android:alpha="0.3"
-            android:background="@drawable/list_item_selector" />
+             />
 
         <TextView
             android:id="@+id/recipe_title"

@@ -32,11 +32,15 @@ public class RecipeFragment extends Fragment {
     RecyclerView ingredientsRecycler;
     @BindView(R.id.steps_list)
     RecyclerView stepsRecycler;
-
+    private StepCallBack callback;
     private IngredientsAdapter ingredientsAdapter;
     private StepsAdapter stepsAdapter;
     private Realm realm;
     private Model model;
+
+    public void setCallbackHandler(StepCallBack stepCallback) {
+        callback = stepCallback;
+    }
 
     public RecipeFragment() {
     }
@@ -93,7 +97,10 @@ public class RecipeFragment extends Fragment {
         stepsAdapter.setOnItemClickListener(new StepsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int position) {
-
+                if (model != null)
+                    callback.onItemSelected(model.getSteps().get(position).getDescription(),
+                            model.getSteps().get(position).getVideoURL(),
+                            model.getSteps().get(position).getThumbnailURL());
             }
         });
     }
@@ -105,7 +112,7 @@ public class RecipeFragment extends Fragment {
     }
 
     public interface StepCallBack {
-        void onItemSelected(long id);
+        void onItemSelected(String description, String videoURL, String thumbnailURL);
 
     }
 }

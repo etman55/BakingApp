@@ -9,6 +9,6 @@
 
     <!-- COMPLETED (3) Add one more item for the default (unselected) state -->
     <!-- This should have a default drawable color = "@android:color/background_light" -->
-    <item android:drawable="@color/dark_grey" />
+    <item android:drawable="@color/united_nations_blue" />
 
 </selector>
