@@ -27,15 +27,14 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeFr
         setContentView(R.layout.activity_recipe_details);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        if (getIntent().getExtras() != null) {
+        if (getIntent().getExtras() != null)
             recipeId = getIntent().getExtras().getLong("recipeId");
-            RecipeFragment recipeFragment = RecipeFragment.newInstance(recipeId);
-            recipeFragment.setCallbackHandler(this);
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.recipe_fragment, recipeFragment);
-            ft.commit();
-        }
-
+        if (savedInstanceState != null)
+            recipeId = savedInstanceState.getLong("recipeId");
+        RecipeFragment recipeFragment = (RecipeFragment)
+                getSupportFragmentManager().findFragmentById(R.id.recipe_fragment);
+        recipeFragment.setCallbackHandler(this);
+        recipeFragment.getRecipeId(recipeId);
     }
 
     @Override
@@ -49,5 +48,11 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeFr
             startActivity(intent);
         } else
             stepFragment.getStepInfo(description, videoURL, thumbnailURL);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong("recipeId", recipeId);
     }
 }

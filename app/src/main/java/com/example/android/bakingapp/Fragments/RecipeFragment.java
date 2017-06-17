@@ -27,7 +27,6 @@ public class RecipeFragment extends Fragment {
     private static final String TAG = RecipeFragment.class.getSimpleName();
     // the fragment initialization parameters
     private static final String ARG_ID = "recipeId";
-    private long recipeId;
     @BindView(R.id.ingredients_list)
     RecyclerView ingredientsRecycler;
     @BindView(R.id.steps_list)
@@ -45,24 +44,10 @@ public class RecipeFragment extends Fragment {
     public RecipeFragment() {
     }
 
-    public static RecipeFragment newInstance(long param1) {
-        RecipeFragment fragment = new RecipeFragment();
-        Bundle args = new Bundle();
-        args.putLong(ARG_ID, param1);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         realm = Realm.getDefaultInstance();
-        if (getArguments() != null) {
-            recipeId = getArguments().getLong(ARG_ID);
-            model = realm.where(Model.class)
-                    .equalTo("id", recipeId)
-                    .findFirst();
-        }
 
     }
 
@@ -73,10 +58,6 @@ public class RecipeFragment extends Fragment {
         ButterKnife.bind(this, rootView);
         setIngredientsRecycler();
         setStepsRecycler();
-        if (model != null) {
-            ingredientsAdapter.updateList(model.getIngredients());
-            stepsAdapter.updateList(model.getSteps());
-        }
         return rootView;
     }
 
@@ -115,4 +96,16 @@ public class RecipeFragment extends Fragment {
         void onItemSelected(String description, String videoURL, String thumbnailURL);
 
     }
+
+    public void getRecipeId(long id) {
+        model = realm.where(Model.class)
+                .equalTo("id", id)
+                .findFirst();
+
+        if (model != null) {
+            ingredientsAdapter.updateList(model.getIngredients());
+            stepsAdapter.updateList(model.getSteps());
+        }
+    }
+
 }
