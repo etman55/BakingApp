@@ -39,7 +39,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 
-public class StepFragment extends Fragment implements ExoPlayer.EventListener {
+public class StepFragment extends Fragment {
     private static final String TAG = StepFragment.class.getSimpleName();
     private String desc;
     private String videoUrl;
@@ -53,8 +53,6 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
     @BindView(R.id.step_video)
     SimpleExoPlayerView simpleExoPlayerView;
     private SimpleExoPlayer simpleExoPlayer;
-    private MediaSessionCompat mediaSessionCompat;
-    private PlaybackStateCompat.Builder builder;
     private boolean isReady;
     private long playPosition;
     private int currentFrame;
@@ -65,13 +63,13 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
         View rootView = inflater.inflate(R.layout.fragment_step, container, false);
         ButterKnife.bind(this, rootView);
         if (savedInstanceState != null) {
-            playPosition = savedInstanceState.getLong("position");
-            currentFrame = savedInstanceState.getInt("frame");
-            isReady = savedInstanceState.getBoolean("isReady");
             videoUrl = savedInstanceState.getString("url");
-            if (videoUrl != null && videoUrl.equals(""))
-                if (getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+            if (getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+                if (videoUrl != null && videoUrl.equals("")) {
                     Toast.makeText(getContext(), "No Video Available", Toast.LENGTH_SHORT).show();
+                } else if (videoUrl != null)
+                    hideSystemUi();
+
         }
         return rootView;
     }
@@ -90,102 +88,27 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
         if (videoUrl.equals(""))
             simpleExoPlayerView.setVisibility(View.GONE);
         initPlayer();
-        simpleExoPlayer.addListener(this);
-        initMediaSession();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("frame", currentFrame);
-        outState.putLong("position", playPosition);
-        outState.putBoolean("isReady", isReady);
         outState.putString("url", videoUrl);
     }
 
     private void initPlayer() {
-        simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(
-                new DefaultRenderersFactory(getContext()),
-                new DefaultTrackSelector(), new DefaultLoadControl());
-        simpleExoPlayerView.setPlayer(simpleExoPlayer);
-        simpleExoPlayer.setPlayWhenReady(isReady);
-        simpleExoPlayer.seekTo(currentFrame, playPosition);
-        Uri uri = Uri.parse(videoUrl);
-        MediaSource mediaSource = new ExtractorMediaSource(uri,
+        if (simpleExoPlayer == null) {
+            simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(
+                    new DefaultRenderersFactory(getContext()),
+                    new DefaultTrackSelector(), new DefaultLoadControl());
+            simpleExoPlayerView.setPlayer(simpleExoPlayer);
+            simpleExoPlayer.setPlayWhenReady(isReady);
+            simpleExoPlayer.seekTo(currentFrame, playPosition);
+        }
+        MediaSource mediaSource = new ExtractorMediaSource(Uri.parse(videoUrl),
                 new DefaultHttpDataSourceFactory("ua"),
                 new DefaultExtractorsFactory(), null, null);
         simpleExoPlayer.prepare(mediaSource, true, false);
-    }
-
-    private void initMediaSession() {
-        mediaSessionCompat = new MediaSessionCompat(getContext(), TAG);
-        mediaSessionCompat.setFlags(
-                MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
-                        MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
-        );
-        mediaSessionCompat.setMediaButtonReceiver(null);
-        builder = new PlaybackStateCompat.Builder().setActions(PlaybackStateCompat.ACTION_PLAY |
-                PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS);
-        mediaSessionCompat.setPlaybackState(builder.build());
-        mediaSessionCompat.setCallback(new MyMediaSessionCallback());
-        mediaSessionCompat.setActive(true);
-    }
-
-    @Override
-    public void onTimelineChanged(Timeline timeline, Object manifest) {
-
-    }
-
-    @Override
-    public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-
-    }
-
-    @Override
-    public void onLoadingChanged(boolean isLoading) {
-
-    }
-
-    @Override
-    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-        if ((playbackState == ExoPlayer.STATE_READY) && playWhenReady)
-            builder.setState(PlaybackStateCompat.STATE_PLAYING, simpleExoPlayer.getCurrentPosition(), 1f);
-        else if (playbackState == ExoPlayer.STATE_READY)
-            builder.setState(PlaybackStateCompat.STATE_PAUSED, simpleExoPlayer.getCurrentPosition(), 1f);
-        mediaSessionCompat.setPlaybackState(builder.build());
-
-    }
-
-    @Override
-    public void onPlayerError(ExoPlaybackException error) {
-
-    }
-
-    @Override
-    public void onPositionDiscontinuity() {
-
-    }
-
-    @Override
-    public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
-
-    }
-
-    private class MyMediaSessionCallback extends MediaSessionCompat.Callback {
-        @Override
-        public void onPlay() {
-            simpleExoPlayer.setPlayWhenReady(true);
-        }
-
-        @Override
-        public void onPause() {
-            simpleExoPlayer.setPlayWhenReady(false);
-        }
-
-        @Override
-        public void onSkipToPrevious() {
-            simpleExoPlayer.seekTo(0);
-        }
     }
 
     private void releasePlayer() {
@@ -198,12 +121,24 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
         }
     }
 
+    private void hideSystemUi() {
+        simpleExoPlayerView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         releasePlayer();
-        if (mediaSessionCompat != null) {
-            mediaSessionCompat.setActive(false);
-        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        releasePlayer();
     }
 }

@@ -14,8 +14,6 @@ import butterknife.ButterKnife;
 
 public class StepDetailsActivity extends AppCompatActivity {
     private static final String TAG = StepDetailsActivity.class.getSimpleName();
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
     private String stepDesc;
     private String stepVideo;
     private String stepImage;
@@ -24,8 +22,6 @@ public class StepDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_details);
-        ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
         if (getIntent().getExtras() != null) {
             stepDesc = getIntent().getExtras().getString("stepDesc");
             stepVideo = getIntent().getExtras().getString("stepVideo");

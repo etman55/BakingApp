@@ -34,7 +34,9 @@
         </receiver>
 
         <activity android:name=".Activities.RecipeDetailsActivity" />
-        <activity android:name=".Activities.StepDetailsActivity"></activity>
+        <activity
+            android:name=".Activities.StepDetailsActivity"
+            android:theme="@style/stepTheme"></activity>
     </application>
 
 </manifest>
