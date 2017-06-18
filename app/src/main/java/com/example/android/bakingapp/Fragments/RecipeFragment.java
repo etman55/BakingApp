@@ -64,6 +64,7 @@ public class RecipeFragment extends Fragment {
 
     private void setIngredientsRecycler() {
         ingredientsRecycler.setHasFixedSize(true);
+        ingredientsRecycler.setNestedScrollingEnabled(false);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         ingredientsRecycler.setLayoutManager(mLayoutManager);
         ingredientsAdapter = new IngredientsAdapter(getContext());
@@ -72,6 +73,7 @@ public class RecipeFragment extends Fragment {
 
     private void setStepsRecycler() {
         stepsRecycler.setHasFixedSize(true);
+        stepsRecycler.setNestedScrollingEnabled(false);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         stepsRecycler.setLayoutManager(mLayoutManager);
         stepsAdapter = new StepsAdapter(getContext());
