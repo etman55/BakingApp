@@ -7,4 +7,6 @@
     <string name="recipe_steps">Steps</string>
     <string name="quantity">quantity</string>
     <string name="content_summary">Step Descreption</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>
