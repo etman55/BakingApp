@@ -12,6 +12,7 @@ import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.example.android.bakingapp.API.ApiHandler;
+import com.example.android.bakingapp.Models.Ingredient;
 import com.example.android.bakingapp.Models.Model;
 import com.example.android.bakingapp.R;
 
@@ -29,7 +30,6 @@ import retrofit2.Response;
  */
 
 public class ListWidgetService extends RemoteViewsService {
-
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
@@ -75,14 +75,25 @@ public class ListWidgetService extends RemoteViewsService {
             Model model = models.get(position);
             long id = model.getId();
             String recipe = model.getName();
+            StringBuilder ingredientsDesc = new StringBuilder();
+            for (Ingredient ingredient : model.getIngredients()) {
+                ingredientsDesc.append(" * ");
+                ingredientsDesc.append(ingredient.getQuantity());
+                ingredientsDesc.append(" ");
+                ingredientsDesc.append(ingredient.getMeasure());
+                ingredientsDesc.append(" - ");
+                ingredientsDesc.append(ingredient.getIngredient());
+                ingredientsDesc.append("\n");
+            }
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_list_item);
             views.setTextViewText(R.id.recipe_name_widget, recipe);
+            views.setTextViewText(R.id.ingredients_widget, ingredientsDesc);
             // Fill in the onClick PendingIntent Template using the specific plant Id for each item individually
             Bundle extras = new Bundle();
             extras.putLong("recipeId", id);
             Intent fillInIntent = new Intent();
             fillInIntent.putExtras(extras);
-            views.setOnClickFillInIntent(R.id.recipe_name_widget, fillInIntent);
+            views.setOnClickFillInIntent(R.id.recipe_name_widget,fillInIntent);
             return views;
         }
 
@@ -113,7 +124,7 @@ public class ListWidgetService extends RemoteViewsService {
                 @Override
                 public void onResponse(Call<List<Model>> call, Response<List<Model>> response) {
                     models = response.body();
-                    appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.recipes_list_widget);
+                    appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.stackView_widget);
                 }
 
                 @Override

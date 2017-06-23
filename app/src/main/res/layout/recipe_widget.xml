@@ -3,10 +3,10 @@
     android:layout_height="match_parent"
     android:padding="@dimen/widget_margin">
 
-    <ListView
-        android:id="@+id/recipes_list_widget"
+    <StackView
+        android:id="@+id/stackView_widget"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:dividerHeight="5dp" />
+        android:layout_height="match_parent" />
+
 
 </RelativeLayout>
