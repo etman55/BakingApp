@@ -2,6 +2,10 @@ package com.example.android.bakingapp.Activities;
 
 import android.content.Intent;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +19,7 @@ import android.widget.TextView;
 import com.example.android.bakingapp.API.DownloadResultReceiver;
 import com.example.android.bakingapp.API.RecipesService;
 import com.example.android.bakingapp.Adapters.RecipesAdapter;
+import com.example.android.bakingapp.IdlingResource.SimpleIdlingResource;
 import com.example.android.bakingapp.Models.Model;
 import com.example.android.bakingapp.R;
 
@@ -47,6 +52,16 @@ public class MainActivity extends AppCompatActivity implements DownloadResultRec
             recipesAdapter.updateList(models);
         }
     };
+    private SimpleIdlingResource simpleIdlingResource = new SimpleIdlingResource();
+
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource() {
+        if (simpleIdlingResource == null) {
+            simpleIdlingResource = new SimpleIdlingResource();
+        }
+        return simpleIdlingResource;
+    }
 
     @Override
     protected void onStart() {
@@ -59,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements DownloadResultRec
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        getIdlingResource();
         realm = Realm.getDefaultInstance();
         setSupportActionBar(toolbar);
         downloadResultReceiver = new DownloadResultReceiver(new Handler());
@@ -104,6 +120,9 @@ public class MainActivity extends AppCompatActivity implements DownloadResultRec
         progressBar.setVisibility(View.INVISIBLE);
         errorLayout.setVisibility(View.INVISIBLE);
         recipesRecycler.setVisibility(View.VISIBLE);
+        if (simpleIdlingResource != null) {
+            simpleIdlingResource.setIdleState(true);
+        }
     }
 
     private void showError(String error) {
@@ -117,6 +136,9 @@ public class MainActivity extends AppCompatActivity implements DownloadResultRec
         recipesRecycler.setVisibility(View.INVISIBLE);
         errorLayout.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
+        if (simpleIdlingResource != null) {
+            simpleIdlingResource.setIdleState(false);
+        }
     }
 
     @Override

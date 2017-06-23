@@ -4,7 +4,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="ingredients">Ingredients</string>
-    <string name="recipe_steps">Steps</string>
+    <string name="steps">Steps</string>
     <string name="quantity">quantity</string>
     <string name="content_summary">Step Descreption</string>
     <string name="appwidget_text">EXAMPLE</string>
