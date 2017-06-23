@@ -59,6 +59,8 @@ public class RecipeFragment extends Fragment {
         ButterKnife.bind(this, rootView);
         setIngredientsRecycler();
         setStepsRecycler();
+        if (savedInstanceState == null)
+            scrollView.smoothScrollTo(0, 0);
         return rootView;
     }
 
@@ -108,7 +110,7 @@ public class RecipeFragment extends Fragment {
         if (model != null) {
             ingredientsAdapter.updateList(model.getIngredients());
             stepsAdapter.updateList(model.getSteps());
-            scrollView.smoothScrollTo(0, 0);
+
         }
     }
 
